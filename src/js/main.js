@@ -1,76 +1,27 @@
 import "../css/style.css";
+/// models
+import { BookModel } from "./models/book_model";
+import { CheckModel } from "./models/check_model";
+import {
+  StatisticsBookModel,
+  StatisticsVisitorModel,
+} from "./models/statistics_model";
+import { VisitorModel } from "./models/visitor_model";
+///mocks
+import { mockBooks, mockVisitors, mockChecks } from "./mocks";
+/// utils
+import { dateUtils } from "./utils/date_utils";
+import { sortUtils } from "./utils/sort_utils";
+import { validFormsUtils } from "./utils/valid_forms_utils";
 
-class Book {
-  constructor(
-    all_id,
-    id,
-    title,
-    nameAuthor,
-    year,
-    pubHouse,
-    pages,
-    amount,
-    image
-  ) {
-    this.all_id = all_id;
-    this.id = id;
-    this.title = title;
-    this.nameAuthor = nameAuthor;
-    this.year = year;
-    this.pubHouse = pubHouse;
-    this.pages = pages;
-    this.amount = amount;
-    this.image = image;
-  }
-}
-class Visitor {
-  constructor(id, name, phone) {
-    this.id = id;
-    this.name = name;
-    this.phone = phone;
-  }
-}
-class Check {
-  constructor(
-    id,
-    all_id,
-    idVisitor,
-    nameVisitor,
-    idBook,
-    titleBook,
-    dateTook,
-    dateReturned
-  ) {
-    this.id = id;
-    this.all_id = all_id;
-    this.idVisitor = idVisitor;
-    this.nameVisitor = nameVisitor;
-    this.idBook = idBook;
-    this.titleBook = titleBook;
-    this.dateTook = dateTook;
-    this.dateReturned = dateReturned;
-  }
-}
-class StatVis {
-  constructor(Vis, VisCol) {
-    this.Vis = Vis;
-    this.VisCol = VisCol;
-  }
-}
-class StatBk {
-  constructor(Bk, BkCol) {
-    this.Bk = Bk;
-    this.BkCol = BkCol;
-  }
-}
 function restart() {
   valBooks = JSON.stringify(VueBook.books);
   localStorage.setItem(keyBooks, valBooks);
-  VueBook.filterArray = copyBook(VueBook.books);
+  VueBook.filterArray = [...VueBook.books];
 
   valVisitors = JSON.stringify(VueVisitor.visitors);
   localStorage.setItem(keyVisitors, valVisitors);
-  VueVisitor.filterArray = copyVisitor(VueVisitor.visitors);
+  VueVisitor.filterArray = [...VueVisitor.visitors];
 
   valChecks = JSON.stringify(VueCheck.checks);
   localStorage.setItem(keyChecks, valChecks);
@@ -94,10 +45,8 @@ function hideBackgraund() {
   $("body").css("overflow", "auto");
   IsClosed = false;
   $("#backgraund-hide").css("opacity", "0");
-  function hideBack(params) {
-    $("#backgraund-hide").css("display", "none");
-  }
-  setTimeout(hideBack, 1000);
+
+  setTimeout(() => $("#backgraund-hide").css("display", "none"), 1000);
 }
 $("#backgraund-hide").css("height", $(document).outerHeight(true));
 function showBackgraund() {
@@ -106,177 +55,28 @@ function showBackgraund() {
   $("body").css("overflow", "hidden");
   $("#backgraund-hide").css("height", $(document).outerHeight(true));
   $("#backgraund-hide").css("display", "inherit");
-  function ShowBack() {
-    $("#backgraund-hide").css("opacity", "1");
-  }
-  setTimeout(ShowBack, 1);
+
+  setTimeout(() => $("#backgraund-hide").css("opacity", "1"), 1);
 }
 //если не создано, создаём ключ в локальном хранилище
 let keyBooks = "Books";
 let valBooks = localStorage.getItem(keyBooks);
 if (valBooks == null) {
-  let myDefaltArray = [
-    new Book(
-      0,
-      1,
-      "Белый Клык",
-      "Джек Лондон",
-      2005,
-      "Дрофа-Плюс",
-      384,
-      57,
-      "http://loveread.ec/img/photo_books/4450.jpg"
-    ),
-    new Book(
-      1,
-      2,
-      "Маленький принц",
-      "Антуан де Сент-Экзюпери",
-      2007,
-      "Эксмо",
-      104,
-      3,
-      "http://loveread.ec/img/photo_books/1833.jpg"
-    ),
-    new Book(
-      2,
-      3,
-      "Богатый папа, бедный папа",
-      "Роберт Т. Кийосаки",
-      1997,
-      "Попурри",
-      224,
-      10,
-      "https://images-na.ssl-images-amazon.com/images/I/41PLBorWaOL.jpg"
-    ),
-    new Book(
-      3,
-      4,
-      "Чистый код",
-      "Роберт Мартин",
-      2008,
-      "Прентис Холл",
-      464,
-      0,
-      "https://media.proglib.io/wp-uploads/-000//1/08716001.cover_max1500.jpg"
-    ),
-    new Book(
-      4,
-      5,
-      "Мохаммед Али. Неизданное",
-      "Али Мохаммед",
-      2016,
-      "Эксмо",
-      3000,
-      101,
-      "https://img.yakaboo.ua/media/catalog/product/cache/1/image/398x565/234c7c011ba026e66d29567e1be1d1f7/1/0/101_26.jpg"
-    ),
-    new Book(
-      5,
-      6,
-      "Война и мир",
-      "Лев Толстой",
-      1865,
-      "Русский вестник",
-      1225,
-      12,
-      "https://st.kp.yandex.net/images/film_iphone/iphone360_893150.jpg"
-    ),
-  ];
-  valBooks = JSON.stringify(myDefaltArray);
+  valBooks = JSON.stringify(mockBooks);
   localStorage.setItem(keyBooks, valBooks);
 }
 let keyVisitors = "Visitors";
 let valVisitors = localStorage.getItem(keyVisitors);
 if (valVisitors == null) {
-  let myDefaltArray = [
-    new Visitor(1, "Colette Kelley", "012 435 45 67"),
-    new Visitor(2, "Ruby Lennon", "012 647 34 24"),
-    new Visitor(3, "Leanne Gibbons", "012 879 78 45"),
-    new Visitor(4, "Rumaisa Peel", "012 456 64 67"),
-    new Visitor(5, "Gene Medrano", "012 245 47 89"),
-    new Visitor(6, "Sheridan Tucker", "012 345 85 90"),
-  ];
-  valVisitors = JSON.stringify(myDefaltArray);
+  valVisitors = JSON.stringify(mockVisitors);
   localStorage.setItem(keyVisitors, valVisitors);
 }
 
 let keyChecks = "Checks";
 let valChecks = localStorage.getItem(keyChecks);
-function convertDate(date) {
-  let day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-  return `${day}.${month}.${year}`;
-}
+
 if (valChecks == null) {
-  let myDefaltArray = [
-    new Check(
-      1,
-      0,
-      1,
-      "",
-      0,
-      "",
-      convertDate(new Date(2015, 10, 30)),
-      convertDate(new Date(2015, 11, 24))
-    ),
-    new Check(
-      2,
-      1,
-      1,
-      "",
-      3,
-      "",
-      convertDate(new Date(2016, 0, 19)),
-      convertDate(new Date(2016, 2, 8))
-    ),
-    new Check(
-      3,
-      2,
-      2,
-      "",
-      4,
-      "",
-      convertDate(new Date(2017, 5, 4)),
-      convertDate(new Date(2017, 8, 24))
-    ),
-    new Check(
-      4,
-      3,
-      2,
-      "",
-      0,
-      "",
-      convertDate(new Date(2018, 6, 12)),
-      convertDate(new Date(2018, 7, 13))
-    ),
-    new Check(5, 4, 1, "", 1, "", convertDate(new Date(2019, 1, 13)), ""),
-    new Check(
-      6,
-      5,
-      5,
-      "",
-      3,
-      "",
-      convertDate(new Date(2019, 2, 8)),
-      convertDate(new Date(2019, 3, 17))
-    ),
-    new Check(7, 6, 5, "", 2, "", convertDate(new Date(2019, 2, 15)), ""),
-    new Check(
-      8,
-      7,
-      6,
-      "",
-      0,
-      "",
-      convertDate(new Date(2019, 3, 27)),
-      convertDate(new Date(2019, 5, 9))
-    ),
-    new Check(9, 8, 4, "", 4, "", convertDate(new Date(2019, 4, 5)), ""),
-    new Check(10, 9, 3, "", 3, "", convertDate(new Date(2019, 4, 9)), ""),
-  ];
-  valChecks = JSON.stringify(myDefaltArray);
+  valChecks = JSON.stringify(mockChecks);
   localStorage.setItem(keyChecks, valChecks);
 }
 let keyLastAllIdBook = "LastAllIdBook";
@@ -360,7 +160,7 @@ let VueBook = new Vue({
     filterArray: [],
     filterText: "",
     selectedSortList: 0,
-    selectedbook: new Book(0, 0, "", "", 0, "", 0, 0, ""),
+    selectedbook: new BookModel(),
     isNewBook: false,
   },
   methods: {
@@ -382,10 +182,13 @@ let VueBook = new Vue({
         );
       });
       this.filterArray = res;
-      sortMyListBook(this.selectedSortList, this.filterArray);
+      sortUtils.sortListBook(this.selectedSortList, this.filterArray);
     },
     sortbook: function (event) {
-      this.filterArray = sortMyListBook(event.target.value, this.filterArray);
+      this.filterArray = sortUtils.sortListBook(
+        event.target.value,
+        this.filterArray
+      );
       this.selectedSortList = event.target.value;
     },
     editMode(ElementBook) {
@@ -429,7 +232,7 @@ let VueBook = new Vue({
       VueCheck.deletecheck(ElementBook.all_id);
       restart();
       this.filter();
-      sortMyListBook(this.selectedSortList, this.filterArray);
+      sortUtils.sortListBook(this.selectedSortList, this.filterArray);
       this.editModeClose();
       VueCheck.restart();
     },
@@ -464,7 +267,7 @@ let VueBook = new Vue({
 
         this.editModeClose();
         this.filter();
-        sortMyListBook(this.selectedSortList, this.filterArray);
+        sortUtils.sortListBook(this.selectedSortList, this.filterArray);
         for (let i = 1; i <= 7; i++) {
           $(".card-edit span[name=" + i + "]").css("display", "none");
         }
@@ -502,7 +305,7 @@ let VueBook = new Vue({
         $(".card-edit span[name=" + i + "]").css("display", "none");
       }
       if (this.isNewBook) {
-        this.filterArray = copyBook(this.books);
+        this.filterArray = [...this.books];
         this.isNewBook = false;
       }
       $("#small-library").css("padding-right", "0px");
@@ -534,7 +337,7 @@ let VueBook = new Vue({
       this.isNewBook = true;
       let ElementBook;
       if (this.books.length != 0) {
-        ElementBook = new Book(
+        ElementBook = new BookModel(
           this.books[this.books.length - 1].all_id + 1,
           this.books.length + 1,
           "",
@@ -546,7 +349,7 @@ let VueBook = new Vue({
           "http://razukraska.ru/wp-content/gallery/kniga/kniga7.gif"
         );
       } else {
-        ElementBook = new Book(
+        ElementBook = new BookModel(
           valLastAllIdBook + 1,
           this.books.length + 1,
           "",
@@ -577,72 +380,10 @@ let VueBook = new Vue({
   },
   mounted() {
     //копируем основной массив
-    this.filterArray = copyBook(this.books);
+    this.filterArray = [...this.books];
   },
 });
-function copyBook(arr) {
-  let newArr = [];
-  for (let i = 0; i < arr.length; i++) {
-    newArr.push(new Book(0, 0, "", "", 0, "", 0, 0, ""));
-    newArr[i].all_id = arr[i].all_id;
-    newArr[i].id = arr[i].id;
-    newArr[i].title = arr[i].title;
-    newArr[i].nameAuthor = arr[i].nameAuthor;
-    newArr[i].year = arr[i].year;
-    newArr[i].pubHouse = arr[i].pubHouse;
-    newArr[i].pages = arr[i].pages;
-    newArr[i].amount = arr[i].amount;
-    newArr[i].image = arr[i].image;
-  }
-  return newArr;
-}
-function sortMyListBook(key, filterArray) {
-  key = Number(key);
-  switch (key) {
-    case 0:
-      filterArray.sort(function (a, b) {
-        return parseFloat(a.id) - parseFloat(b.id);
-      });
-      break;
-    case 1:
-      filterArray.sort(function (a, b) {
-        if (a.title < b.title) return -1;
-        if (a.title > b.title) return 1;
-        return 0;
-      });
-      break;
-    case 2:
-      filterArray.sort(function (a, b) {
-        if (a.nameAuthor < b.nameAuthor) return -1;
-        if (a.nameAuthor > b.nameAuthor) return 1;
-        return 0;
-      });
-      break;
-    case 3:
-      filterArray.sort(function (a, b) {
-        return parseFloat(a.year) - parseFloat(b.year);
-      });
-      break;
-    case 4:
-      filterArray.sort(function (a, b) {
-        if (a.pubHouse < b.pubHouse) return -1;
-        if (a.pubHouse > b.pubHouse) return 1;
-        return 0;
-      });
-      break;
-    case 5:
-      filterArray.sort(function (a, b) {
-        return parseFloat(a.pages) - parseFloat(b.pages);
-      });
-      break;
-    case 6:
-      filterArray.sort(function (a, b) {
-        return parseFloat(a.amount) - parseFloat(b.amount);
-      });
-      break;
-  }
-  return filterArray;
-}
+
 //форма создания нового посетителя
 Vue.component("edit-component", {
   props: [
@@ -655,20 +396,20 @@ Vue.component("edit-component", {
     return {};
   },
   template: `
-        <div id="window-div">
-            <form onsubmit="return false;">
-                <a @click="btnClouseClick">✖</a>
-                <h4>{{headerform}}</h4>
-                <h6>Имя Фамилия:</h6>
-                <input v-model="selectedvisitor.name" type="text" pattern="[A-ZА-ЯЁ][a-zа-яё]* [A-ZА-ЯЁ][a-zа-яё]*">
-                <p id="VisIsHaveName">Посетитель с таким именем уже существует*</p>
-                <h6>Номер телефона(0-9, -, ):</h6>
-                <input v-model="selectedvisitor.phone" type="text" pattern="([0-9]* ?-?[0-9]*)*">
-                <p id="VisIsHavePhone">Посетитель с таким номером телефона уже существует*</p>
-                <br>
-                <button type="buttom" @mousedown="btncreated" class="btn btn-primary">Сохранить</button>
-            </form>
-        </div>`,
+          <div id="window-div">
+              <form onsubmit="return false;">
+                  <a @click="btnClouseClick">✖</a>
+                  <h4>{{headerform}}</h4>
+                  <h6>Имя Фамилия:</h6>
+                  <input v-model="selectedvisitor.name" type="text" pattern="[A-ZА-ЯЁ][a-zа-яё]* [A-ZА-ЯЁ][a-zа-яё]*">
+                  <p id="VisIsHaveName">Посетитель с таким именем уже существует*</p>
+                  <h6>Номер телефона(0-9, -, ):</h6>
+                  <input v-model="selectedvisitor.phone" type="text" pattern="([0-9]* ?-?[0-9]*)*">
+                  <p id="VisIsHavePhone">Посетитель с таким номером телефона уже существует*</p>
+                  <br>
+                  <button type="buttom" @mousedown="btncreated" class="btn btn-primary">Сохранить</button>
+              </form>
+          </div>`,
   methods: {
     btncreated() {
       if (this.selectedvisitor.id == 0) {
@@ -692,18 +433,18 @@ let VueVisitor = new Vue({
     filterText: "",
     selectedSortList: 0,
     headerform: "Добавить клиента:",
-    selectedvisitor: new Visitor(0, "", ""),
+    selectedvisitor: new VisitorModel(0, "", ""),
   },
   methods: {
     //сортировка по ID или Name
     sortvisitor: function (event) {
       switch (event.target.value) {
         case "0":
-          this.filterArray = sortMyListVisitor(0, this.filterArray);
+          this.filterArray = sortUtils.sortListVisitor(0, this.filterArray);
           this.selectedSortList = 0;
           break;
         case "1":
-          this.filterArray = sortMyListVisitor(1, this.filterArray);
+          this.filterArray = sortUtils.sortListVisitor(1, this.filterArray);
           this.selectedSortList = 1;
           break;
       }
@@ -724,23 +465,30 @@ let VueVisitor = new Vue({
         );
       });
       this.filterArray = res;
-      sortMyListVisitor(this.selectedSortList, this.filterArray);
+      sortUtils.sortListVisitor(this.selectedSortList, this.filterArray);
     },
     //создание\изменение нового пользователя
     createeditnewvisitor: function (newVis, isEdit) {
       if (newVis != null) {
         //копируем полученого нового пользователя
-        let copyVisit = new Visitor();
+        let copyVisit = new VisitorModel();
         if (isEdit) copyVisit.id = newVis.id;
         else copyVisit.id = this.visitors.length + 1;
         copyVisit.name = newVis.name;
         copyVisit.phone = newVis.phone;
-        let searchEditElement = new Visitor(0, "", "");
+        let searchEditElement = new VisitorModel(0, "", "");
         if (isEdit)
           searchEditElement = this.visitors.filter(
             (a) => a.id == copyVisit.id
           )[0];
-        if (isValid(copyVisit, this.visitors, isEdit, searchEditElement)) {
+        if (
+          validFormsUtils.isValid(
+            copyVisit,
+            this.visitors,
+            isEdit,
+            searchEditElement
+          )
+        ) {
           if (isEdit) {
             searchEditElement.name = copyVisit.name;
             searchEditElement.phone = copyVisit.phone;
@@ -749,14 +497,14 @@ let VueVisitor = new Vue({
           }
           restart();
 
-          this.selectedvisitor = new Visitor(0, "", "");
+          this.selectedvisitor = new VisitorModel(0, "", "");
           this.HideVisitorForm();
           this.filter();
-          sortMyListVisitor(this.selectedSortList, this.filterArray);
+          sortUtils.sortListVisitor(this.selectedSortList, this.filterArray);
           VueCheck.restart();
         }
       } else {
-        this.selectedvisitor = new Visitor(0, "", "");
+        this.selectedvisitor = new VisitorModel(0, "", "");
       }
     },
     //показать форму создания/изменения пользователя
@@ -768,7 +516,7 @@ let VueVisitor = new Vue({
         this.selectedvisitor.phone = ElementVisitor.phone;
       } else {
         this.headerform = "Добавить клиента:";
-        this.selectedvisitor = new Visitor(0, "", "");
+        this.selectedvisitor = new VisitorModel(0, "", "");
       }
       showBackgraund();
       $("#window-div").css("height", "280px");
@@ -786,89 +534,10 @@ let VueVisitor = new Vue({
   },
   mounted() {
     //копируем основной массив
-    this.filterArray = copyVisitor(this.visitors);
+    this.filterArray = [...this.visitors];
   },
 });
-//копируем массивы между собой
-function copyVisitor(arr) {
-  let newArr = [];
-  for (let i = 0; i < arr.length; i++) {
-    newArr.push(new Visitor(0, "", ""));
-    newArr[i].id = arr[i].id;
-    newArr[i].name = arr[i].name;
-    newArr[i].phone = arr[i].phone;
-  }
-  return newArr;
-}
-//функция сортировки по ID или Name
-function sortMyListVisitor(key, filterArray) {
-  switch (key) {
-    case 0:
-      filterArray.sort(function (a, b) {
-        return parseFloat(a.id) - parseFloat(b.id);
-      });
-      break;
-    case 1:
-      filterArray.sort(function (a, b) {
-        if (a.name < b.name) return -1;
-        if (a.name > b.name) return 1;
-        return 0;
-      });
-      break;
-  }
-  return filterArray;
-}
-//функция проверки на валидность
-function isValid(copyVisit, visitors, isEdit, searchEditElement) {
-  //ищем есть ли совпадения
-  let searchNewElementName = visitors.filter((a) => a.name == copyVisit.name);
-  let searchNewElementPhone = visitors.filter(
-    (a) => a.phone == copyVisit.phone
-  );
-  //проверяем валидность данных
-  let regexpName = "[A-ZА-ЯЁ][a-zа-яё]* [A-ZА-ЯЁ][a-zа-яё]*$";
-  let regexpPhone = "([0-9]* ?-?[0-9]*)*";
-  let matchAllName = Array.from(copyVisit.name.matchAll(regexpName))[0];
-  let matchAllPhone = Array.from(copyVisit.phone.matchAll(regexpPhone));
-  //убрать красные замечания
-  $("#VisIsHavePhone").css("opacity", "0");
-  $("#VisIsHaveName").css("opacity", "0");
-  let isCoolName = true;
-  let isCoolPhone = true;
-  if (isEdit) {
-    if (searchEditElement.name == copyVisit.name) {
-      isCoolName = true;
-    } else {
-      if (searchNewElementName.length >= 1) isCoolName = false;
-    }
 
-    if (searchEditElement.phone == copyVisit.phone) {
-      isCoolPhone = true;
-    } else {
-      if (searchNewElementPhone.length >= 1) isCoolPhone = false;
-    }
-  }
-  if ((!isCoolName || !isCoolPhone) && (isCoolName || isCoolPhone))
-    isEdit = false;
-  //сравнивание полученных данных и сохранение
-  if (
-    matchAllName != undefined &&
-    matchAllPhone.length <= 2 &&
-    copyVisit.name != "" &&
-    copyVisit.phone != ""
-  ) {
-    if (searchNewElementName.length == 0 || isCoolName) {
-      if (searchNewElementPhone.length == 0 || isCoolPhone) {
-        return true;
-      } else {
-        $("#VisIsHavePhone").css("opacity", "1");
-      }
-    } else {
-      $("#VisIsHaveName").css("opacity", "1");
-    }
-  }
-  return false;
-}
 //форма создания новой карты
 Vue.component("edit-component-check", {
   props: ["createnewcheckfunc", "myvisitors", "mybooks", "myfilterboks"],
@@ -879,22 +548,22 @@ Vue.component("edit-component-check", {
     };
   },
   template: `
-            <div id="window-div-check">
-                <form onsubmit="return false;">
-                    <a @click="btnClouseClick">✖</a>
-                    <h4>Новая карточка</h4>
-                    <h6>Имя посетителя:</h6>
-                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="changeVis($event)">
-                            <option v-for="(vis, idx) in myvisitors" :value="idx">{{vis.name}}</option>
-                    </select>
-                    <h6>Книга:</h6>
-                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="changeBk($event)">
-                        <option v-for="(bk, idx) in myfilterboks" :value="idx">{{bk.title}}</option>
-                    </select>
-                    <br>
-                    <button type="buttom" @mousedown="btncreated" class="btn btn-primary">Сохранить</button>
-                </form>
-            </div>`,
+              <div id="window-div-check">
+                  <form onsubmit="return false;">
+                      <a @click="btnClouseClick">✖</a>
+                      <h4>Новая карточка</h4>
+                      <h6>Имя посетителя:</h6>
+                      <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="changeVis($event)">
+                              <option v-for="(vis, idx) in myvisitors" :value="idx">{{vis.name}}</option>
+                      </select>
+                      <h6>Книга:</h6>
+                      <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="changeBk($event)">
+                          <option v-for="(bk, idx) in myfilterboks" :value="idx">{{bk.title}}</option>
+                      </select>
+                      <br>
+                      <button type="buttom" @mousedown="btncreated" class="btn btn-primary">Сохранить</button>
+                  </form>
+              </div>`,
   methods: {
     changeVis(idVis) {
       if (+idVis.target.value != "") {
@@ -918,9 +587,10 @@ Vue.component("edit-component-check", {
         this.idBook = 0;
       }
       $("#window-div-check select").val(0);
-      if ((myEdBooks = this.mybooks.filter((a) => a.amount != 0) != 0)) {
-        let myEdBooks = this.mybooks.filter((a) => a.amount != 0)[this.idBook];
-        this.createnewcheckfunc(this.idVisitor, myEdBooks.all_id);
+      let myEdBooks = this.mybooks.filter((a) => a.amount != 0);
+      if (myEdBooks.length != 0) {
+        let myEdBook = myEdBooks[this.idBook];
+        this.createnewcheckfunc(this.idVisitor, myEdBook.all_id);
         this.idVisitor = 0;
         this.idBook = 0;
       }
@@ -941,7 +611,7 @@ let VueCheck = new Vue({
     filterText: "",
     selectedSortList: 0,
     headerform: "Добавить карту:",
-    selectedcheck: new Check(0, 0, 0, "", 0, "", "", ""),
+    selectedcheck: new CheckModel(),
     myfilterboks: [],
   },
   methods: {
@@ -950,15 +620,15 @@ let VueCheck = new Vue({
       if (!Number.isInteger(event)) event = Number(event.target.value);
       switch (event) {
         case 0:
-          this.filterArray = sortMyListChecks(0, this.filterArray);
+          this.filterArray = sortUtils.sortListChecks(0, this.filterArray);
           this.selectedSortList = 0;
           break;
         case 1:
-          this.filterArray = sortMyListChecks(1, this.filterArray);
+          this.filterArray = sortUtils.sortListChecks(1, this.filterArray);
           this.selectedSortList = 1;
           break;
         case 2:
-          this.filterArray = sortMyListChecks(2, this.filterArray);
+          this.filterArray = sortUtils.sortListChecks(2, this.filterArray);
           this.selectedSortList = 2;
           break;
       }
@@ -984,21 +654,21 @@ let VueCheck = new Vue({
     //создание новой карточки
     createnewcheck: function (idVis, idBk) {
       //копируем полученную новую карту
-      let copyCheck = new Check(0, 0, 0, "", 0, "", "", "");
+      let copyCheck = new CheckModel();
       let thisVis = this.visitors.filter((a) => a.id - 1 == idVis)[0];
       let thisBk = this.books.filter((a) => a.all_id == idBk)[0];
       copyCheck.id = this.checks.length + 1;
       copyCheck.all_id = this.checks.length;
       copyCheck.idVisitor = thisVis.id;
       copyCheck.idBook = thisBk.all_id;
-      copyCheck.dateTook = convertDate(new Date());
+      copyCheck.dateTook = dateUtils.convertDate(new Date());
       copyCheck.dateReturned = "";
       this.checks.push(copyCheck);
       VueBook.books.filter((a) => a.all_id == thisBk.all_id)[0].amount--;
       restart();
       this.restart();
       this.filter();
-      sortMyListChecks(this.selectedSortList, this.filterArray);
+      sortUtils.sortListChecks(this.selectedSortList, this.filterArray);
       this.HideCheckForm();
     },
     deletecheck: function (allIdBook) {
@@ -1018,7 +688,7 @@ let VueCheck = new Vue({
           this.books.filter((a) => a.all_id == this.checks[i].idBook).length !=
           0
         ) {
-          this.filterArray.push(new Check(0, 0, "", 0, "", "", ""));
+          this.filterArray.push(new CheckModel());
           this.filterArray[schet].id = schet + 1;
           this.filterArray[schet].all_id = i;
           this.filterArray[schet].idVisitor = this.checks[i].idVisitor;
@@ -1042,12 +712,14 @@ let VueCheck = new Vue({
       this.copyCheck();
     },
     returnBook(CheckRet, idx) {
-      this.checks[CheckRet.all_id].dateReturned = convertDate(new Date());
+      this.checks[CheckRet.all_id].dateReturned = dateUtils.convertDate(
+        new Date()
+      );
       VueBook.books.filter((a) => a.all_id == CheckRet.idBook)[0].amount++;
       restart();
       this.filter();
-      sortMyListChecks(this.selectedSortList, this.filterArray);
-      this.filterArray[idx].dateReturned = convertDate(new Date());
+      sortUtils.sortListChecks(this.selectedSortList, this.filterArray);
+      this.filterArray[idx].dateReturned = dateUtils.convertDate(new Date());
     },
     //показать форму создания карты
     ShowCheckForm: function () {
@@ -1058,7 +730,7 @@ let VueCheck = new Vue({
         }
       }
       this.headerform = "Добавить клиента:";
-      this.selectedcheck = new Check(0, 0, "", 0, "", "", "");
+      this.selectedcheck = new CheckModel();
       showBackgraund();
       $("#window-div-check").css("height", "280px");
       $("#window-div-check").css("opacity", "1");
@@ -1085,31 +757,7 @@ let VueCheck = new Vue({
     }
   },
 });
-//функция сортировки
-function sortMyListChecks(key, filterArray) {
-  switch (key) {
-    case 0:
-      filterArray.sort(function (a, b) {
-        return parseFloat(a.id) - parseFloat(b.id);
-      });
-      break;
-    case 1:
-      filterArray.sort(function (a, b) {
-        if (a.nameVisitor < b.nameVisitor) return -1;
-        if (a.nameVisitor > b.nameVisitor) return 1;
-        return 0;
-      });
-      break;
-    case 2:
-      filterArray.sort(function (a, b) {
-        if (a.titleBook < b.titleBook) return -1;
-        if (a.titleBook > b.titleBook) return 1;
-        return 0;
-      });
-      break;
-  }
-  return filterArray;
-}
+
 let VueStat = new Vue({
   el: "#stat-container",
   data: {
@@ -1126,7 +774,7 @@ let VueStat = new Vue({
           (a) => a.idVisitor == VueVisitor.visitors[i].id
         );
         if (sovp.length != 0)
-          myArrVisCol.push(new StatVis(sovp[0], sovp.length));
+          myArrVisCol.push(new StatisticsVisitorModel(sovp[0], sovp.length));
       }
       function compareNumericVis(a, b) {
         if (a.VisCol > b.VisCol) return -1;
@@ -1145,7 +793,8 @@ let VueStat = new Vue({
         let sovp = VueCheck.checks.filter(
           (a) => a.idBook == VueBook.books[i].all_id
         );
-        if (sovp.length != 0) myArrBkCol.push(new StatBk(sovp[0], sovp.length));
+        if (sovp.length != 0)
+          myArrBkCol.push(new StatisticsBookModel(sovp[0], sovp.length));
       }
       function compareNumericBk(a, b) {
         if (a.BkCol > b.BkCol) return -1;
