@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset='utf-8'>
@@ -9,7 +9,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <!-- версия для разработки, отображает полезные предупреждения в консоли -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
         <div id="backgraund-hide"></div>
@@ -109,7 +108,7 @@
                     <td>{{vis.id}}</td>
                     <td>{{vis.name}}</td>
                     <td>{{vis.phone}}</td>
-                    <td><img src="Image/pencil.png" @click="ShowVisitorForm(vis)"></td>
+                    <td><img src="images/pencil.png" @click="ShowVisitorForm(vis)"></td>
                 </tr>
             </table>     
                 <edit-component :createeditnewvisitorfunc="createeditnewvisitor" :headerform="headerform" :selectedvisitor="selectedvisitor"/>
@@ -146,7 +145,7 @@
                         <td>{{chk.nameVisitor}}</td>
                         <td>{{chk.titleBook}}</td>
                         <th>{{chk.dateTook}}</th>
-                        <td><img src="Image/return.png" :name="idx" width="70px" @click="returnBook(chk, idx)">{{chk.dateReturned}}</td>
+                        <td><img src="images/return.png" :name="idx" width="70px" @click="returnBook(chk, idx)">{{chk.dateReturned}}</td>
                     </tr>
                 </table>
                     <edit-component-check :createnewcheckfunc="createnewcheck" :myvisitors="visitors" :mybooks="books" :myfilterboks = "myfilterboks"/>
@@ -168,6 +167,5 @@
             </div>
         </div>
     </div>
-        <script src="js/script.js"></script>
 </body>
 </html>
