@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <title>Page Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- версия для разработки, отображает полезные предупреждения в консоли -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+        <div id="backgraund-hide"></div>
+    <div class="bg-light bg-z-indx">
+        <nav class="navbar navbar-expand-lg navbar-light left-right-width">
+            <a class="navbar-brand" href="#">LIBRARY</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" href="#" id="Books-Menu-But">Книги</a>
+                <a class="nav-item nav-link" href="#" id="Visitors-Menu-But">Посетители</a>
+                <a class="nav-item nav-link" href="#" id="Check-Menu-But">Карты</a>
+                <a class="nav-item nav-link" href="#" id="Stat-Menu-But">Статистика</a>
+            </div>
+            </div>
+        </nav>
+    </div>
+    <div id="book-box" class="hide-func">
+            <div id="books-container" class="left-right-width bg-z-indx">
+                    <h1 class="navbar-brand head">Список книг:</h1>
+                    <button type="button" class="btn btn-primary btn-new" @click="ShowNewBookForm()" id="new-book">Новая книга</button>
+                    <hr>
+                    <div class="sort-div control-view">
+                            <p>Отсортировать:</p>
+                            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="sortbook($event)">
+                                <option value="0" selected>По порядку</option>
+                                <option value="1">По названию</option>
+                                <option value="2">По имени автора</option>
+                                <option value="3">По году издания</option>
+                                <option value="4">По названию издания</option>
+                                <option value="5">По количеству страниц</option>
+                                <option value="6">По количеству экземпляров</option>
+                            </select>
+                    </div>
+                    <div class="search-div control-view">
+                            <p>Поиск:</p>
+                            <input class="form-control form-control-lg" type="text" placeholder="Введите текст..." v-model="filterText" v-on:keyUp="filter">
+                    </div>
+                    <br><br>
+                    <div id="small-library">
+                        <div v-for="(book) in filterArray" :id="book.id" class="card">
+                            <div class="btns-edit-books">
+                                <button @click="editMode(book)" class="btn btn-warning btn-book-edit" name="btnBookEdit">Редактировать</button>
+                                <button @click="editModeSave(book)" class="btn btn-primary btn-edit-book btn-book-save" name="btnBookSave">Сохранить</button>
+                                <button @click="editModeDelete(book)" class="btn btn-danger btn-edit-book btn-book-delete" name="btnBookDelete">Удалить</button>
+                            </div>
+                                <img :src="book.image" class="card-img-top" alt="...">
+                                <div class="card-body card-look" name="cardlook">
+                                  <h5 class="card-title">{{book.title}}</h5>
+                                  <p class="card-text">№: {{book.id}}</p>
+                                  <p class="card-text">Автор: {{book.nameAuthor}}</p>
+                                  <p class="card-text">Год издания: {{book.year}}</p>
+                                  <p class="card-text">Издание: {{book.pubHouse}}</p>
+                                  <p class="card-text">Количество страниц: {{book.pages}}</p>
+                                  <p class="card-text">Количество экземпляров: {{book.amount}}</p>
+                                </div>
+                                <div class="card-body card-edit" name="cardedit">
+                                    <p class="card-text">Обложка:<span name="1">*</span> <input class="form-control form-control-lg input-edit-book" type="text" placeholder="Введите текст..." v-model="selectedbook.image"></p>
+                                    <h5 class="card-title">Название:<span name="2">*</span><input class="form-control form-control-lg input-edit-book input-edit-book-title" type="text" placeholder="Введите текст..." v-model="selectedbook.title"></h5>
+                                    <p class="card-text">Автор:<span name="3">*</span><input class="form-control form-control-lg input-edit-book" type="text" placeholder="Введите текст..." v-model="selectedbook.nameAuthor"></p>
+                                    <p class="card-text">Год издания:<span name="4">*</span><input class="form-control form-control-lg input-edit-book" type="number" min="0" oninput="validity.valid||(value='');" placeholder="Введите текст..." v-model="selectedbook.year"></p>
+                                    <p class="card-text">Издание:<span name="5">*</span><input class="form-control form-control-lg input-edit-book" type="text" placeholder="Введите текст..." v-model="selectedbook.pubHouse"></p>
+                                    <p class="card-text">Количество страниц:<span name="6">*</span><input class="form-control form-control-lg input-edit-book" type="number" min="0" oninput="validity.valid||(value='');" placeholder="Введите текст..." v-model="selectedbook.pages"></p>
+                                    <p class="card-text">Количество экземпляров:<span name="7">*</span><input class="form-control form-control-lg input-edit-book" type="number" min="0" oninput="validity.valid||(value='');" placeholder="Введите текст..." v-model="selectedbook.amount"></p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    <div id="visitor-box" class="hide-func">
+        <div id="visitor-container" class="left-right-width bg-z-indx">
+            <h1 class="navbar-brand head">Все клиенты:</h1>
+            <button type="button" class="btn btn-success btn-new" @click="ShowVisitorForm(null)" id="new-visitor">Новый клиент</button>
+            <hr>
+            <div class="sort-div control-view">
+                    <p>Отсортировать:</p>
+                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="sortvisitor($event)">
+                        <option value="0" selected>По порядку</option>
+                        <option value="1">По имени</option>
+                    </select>
+            </div>
+            <div class="search-div control-view">
+                    <p>Поиск:</p>
+                    <input class="form-control form-control-lg" type="text" placeholder="Введите текст..." v-model="filterText" v-on:keyUp="filter">
+            </div>
+            <br><br>
+            <table class="table" cellspacing='0'>
+                <tr>
+                    <th>№</th>
+                    <th>Имя</th>
+                    <th>Номер телефона</th>
+                    <th>Редактировать</th>
+                </tr>
+                <tr v-for="(vis) in filterArray">
+                    <td>{{vis.id}}</td>
+                    <td>{{vis.name}}</td>
+                    <td>{{vis.phone}}</td>
+                    <td><img src="Image/pencil.png" @click="ShowVisitorForm(vis)"></td>
+                </tr>
+            </table>     
+                <edit-component :createeditnewvisitorfunc="createeditnewvisitor" :headerform="headerform" :selectedvisitor="selectedvisitor"/>
+        </div>
+    </div>
+    <div id="check-box" class="hide-func">
+            <div id="check-container" class="left-right-width bg-z-indx">
+                <h1 class="navbar-brand head">Все карты:</h1>
+                <button type="button" class="btn btn-warning btn-new" @click="ShowCheckForm()" id="new-check">Новая карта</button>
+                <hr>
+                <div class="sort-div control-view">
+                        <p>Отсортировать:</p>
+                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="sortcheck($event)">
+                            <option value="0" selected>По порядку</option>
+                            <option value="1">По имени клиента</option>
+                            <option value="2">По названию книги</option>
+                        </select>
+                </div>
+                <div class="search-div control-view">
+                        <p>Поиск:</p>
+                        <input class="form-control form-control-lg" type="text" placeholder="Введите текст..." v-model="filterText" v-on:keyUp="filter">
+                </div>
+                <br><br>
+                <table class="table" cellspacing='0'>
+                    <tr>
+                        <th>№</th>
+                        <th>Имя клиента</th>
+                        <th>Название книги</th>
+                        <th>Дата выдачи</th>
+                        <th>Дата возврата</th>
+                    </tr>
+                    <tr v-for="(chk, idx) in filterArray">
+                        <td>{{chk.id}}</td>
+                        <td>{{chk.nameVisitor}}</td>
+                        <td>{{chk.titleBook}}</td>
+                        <th>{{chk.dateTook}}</th>
+                        <td><img src="Image/return.png" :name="idx" width="70px" @click="returnBook(chk, idx)">{{chk.dateReturned}}</td>
+                    </tr>
+                </table>
+                    <edit-component-check :createnewcheckfunc="createnewcheck" :myvisitors="visitors" :mybooks="books" :myfilterboks = "myfilterboks"/>
+            </div>
+    </div>
+    <div id="stat-box"  class="hide-func">
+        <div id="stat-container" class="left-right-width bg-z-indx">
+            <div>
+                <h1 class="navbar-brand head">Самые активные пользователи:</h1>
+                <ul class="list4a">
+                        <li v-for="(stt) in AktUsers">{{stt}}</li> 
+                </ul>
+            </div>
+            <div>
+                <h1 class="navbar-brand head">Самые популярные книги:</h1>
+                <ul class="list2a">
+                        <li v-for="(stt) in PopBooks">{{stt}}</li> 
+                </ul>
+            </div>
+        </div>
+    </div>
+        <script src="js/script.js"></script>
+</body>
+</html>
