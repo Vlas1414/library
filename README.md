@@ -1,0 +1,2 @@
+# library
+npm run build
