@@ -46,5 +46,3 @@ export const ua = {
   phoneAlreadyExists: "Відвідувач з таким номером телефону вже існує",
   book: "Книга",
 };
-/// i18n.messages[i18n.locale].sort
-// {{ $t("book") }}
