@@ -33,6 +33,21 @@ body {
   margin: 0 auto;
   max-width: 2000px;
 }
+.changeLanguge_btnsBox {
+  width: 100%;
+  text-align: end;
+}
+.changeLanguge_btnText {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 17px;
+}
+.changeLanguge_btn {
+  cursor: pointer;
+}
+.changeLanguge_btn-active {
+  color: rgba(0, 0, 0, 0.8);
+  font-weight: 400;
+}
 #menu {
   height: 45px;
   color: white;
@@ -44,6 +59,7 @@ body {
 }
 .navbar {
   padding-left: 0px;
+  padding-right: 0px;
 }
 .navbar-brand {
   padding: 0px;

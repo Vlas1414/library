@@ -10,163 +10,172 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <!-- версия для разработки, отображает полезные предупреждения в консоли -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
 </head>
 <body>
+
         <div id="backgraund-hide"></div>
-    <div class="bg-light bg-z-indx">
-        <nav class="navbar navbar-expand-lg navbar-light left-right-width">
-            <a class="navbar-brand" href="#">LIBRARY</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" href="#" id="Books-Menu-But">Книги</a>
-                <a class="nav-item nav-link" href="#" id="Visitors-Menu-But">Посетители</a>
-                <a class="nav-item nav-link" href="#" id="Check-Menu-But">Карты</a>
-                <a class="nav-item nav-link" href="#" id="Stat-Menu-But">Статистика</a>
-            </div>
-            </div>
-        </nav>
-    </div>
-    <div id="book-box" class="hide-func">
-            <div id="books-container" class="left-right-width bg-z-indx">
-                    <h1 class="navbar-brand head">Список книг:</h1>
-                    <button type="button" class="btn btn-primary btn-new" @click="ShowNewBookForm()" id="new-book">Новая книга</button>
-                    <hr>
-                    <div class="sort-div control-view">
-                            <p>Отсортировать:</p>
-                            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="sortbook($event)">
-                                <option value="0" selected>По порядку</option>
-                                <option value="1">По названию</option>
-                                <option value="2">По имени автора</option>
-                                <option value="3">По году издания</option>
-                                <option value="4">По названию издания</option>
-                                <option value="5">По количеству страниц</option>
-                                <option value="6">По количеству экземпляров</option>
-                            </select>
+        <div id="app" class="bg-light bg-z-indx">
+            <nav class="navbar navbar-expand-lg navbar-light left-right-width">
+                <a class="navbar-brand" href="#">{{ $t("library") }}</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link" href="#" id="Books-Menu-But">{{ $t("books") }}</a>
+                        <a class="nav-item nav-link" href="#" id="Visitors-Menu-But">{{ $t("visitors") }}</a>
+                        <a class="nav-item nav-link" href="#" id="Check-Menu-But">{{ $t("cards") }}</a>
+                        <a class="nav-item nav-link" href="#" id="Stat-Menu-But">{{ $t("statistics") }}</a>
                     </div>
-                    <div class="search-div control-view">
-                            <p>Поиск:</p>
-                            <input class="form-control form-control-lg" type="text" placeholder="Введите текст..." v-model="filterText" v-on:keyUp="filter">
+                    <div class="changeLanguge_btnsBox">
+                        <span @click="uaClick()" id="changeLanguge_btn_ukrainian" class="changeLanguge_btnText changeLanguge_btn" v-bind:class="{ 'changeLanguge_btn-active': languge == 'ua'} ">Українська</span>
+                        <span class="changeLanguge_btnText">|</span>
+                        <span @click="enClick()" id="changeLanguge_btn_english" class="changeLanguge_btnText changeLanguge_btn" v-bind:class="{ 'changeLanguge_btn-active': languge == 'en'} ">English</span>
                     </div>
-                    <br><br>
-                    <div id="small-library">
-                        <div v-for="(book) in filterArray" :id="book.id" class="card">
-                            <div class="btns-edit-books">
-                                <button @click="editMode(book)" class="btn btn-warning btn-book-edit" name="btnBookEdit">Редактировать</button>
-                                <button @click="editModeSave(book)" class="btn btn-primary btn-edit-book btn-book-save" name="btnBookSave">Сохранить</button>
-                                <button @click="editModeDelete(book)" class="btn btn-danger btn-edit-book btn-book-delete" name="btnBookDelete">Удалить</button>
-                            </div>
-                                <img :src="book.image" class="card-img-top" alt="...">
-                                <div class="card-body card-look" name="cardlook">
-                                  <h5 class="card-title">{{book.title}}</h5>
-                                  <p class="card-text">№: {{book.id}}</p>
-                                  <p class="card-text">Автор: {{book.nameAuthor}}</p>
-                                  <p class="card-text">Год издания: {{book.year}}</p>
-                                  <p class="card-text">Издание: {{book.pubHouse}}</p>
-                                  <p class="card-text">Количество страниц: {{book.pages}}</p>
-                                  <p class="card-text">Количество экземпляров: {{book.amount}}</p>
+                </div>
+            </nav>
+        </div>
+
+        <div id="book-box" class="hide-func">
+                <div id="books-container" class="left-right-width bg-z-indx">
+                        <h1 class="navbar-brand head">{{ $t("bookList") }}:</h1>
+                        <button type="button" class="btn btn-primary btn-new" @click="ShowNewBookForm()" id="new-book">{{ $t("newBook") }}</button>
+                        <hr>
+                        <div class="sort-div control-view">
+                                <p>{{ $t("sort") }}:</p>
+                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="sortbook($event)">
+                                    <option value="0" selected>{{ $t("inOrder") }}</option>
+                                    <option value="1">{{ $t("byName") }}</option>
+                                    <option value="2">{{ $t("byAuthorName") }}</option>
+                                    <option value="3">{{ $t("byYearOfPub") }}</option>
+                                    <option value="4">{{ $t("byPubName") }}</option>
+                                    <option value="5">{{ $t("byNumberOfPages") }}</option>
+                                    <option value="6">{{ $t("byTheNumberOfCopies") }}</option>
+                                </select>
+                        </div>
+                        <div class="search-div control-view">
+                                <p>{{ $t("search") }}:</p>
+                                <input class="form-control form-control-lg" type="text" v-bind:placeholder='$t("enterText") + "..."' v-model="filterText" v-on:keyUp="filter">
+                        </div>
+                        <br><br>
+                        <div id="small-library">
+                            <div v-for="(book) in filterArray" :id="book.id" class="card">
+                                <div class="btns-edit-books">
+                                    <button @click="editMode(book)" class="btn btn-warning btn-book-edit" name="btnBookEdit">{{ $t("edit") }}</button>
+                                    <button @click="editModeSave(book)" class="btn btn-primary btn-edit-book btn-book-save" name="btnBookSave">{{ $t("save") }}</button>
+                                    <button @click="editModeDelete(book)" class="btn btn-danger btn-edit-book btn-book-delete" name="btnBookDelete">{{ $t("delete") }}</button>
                                 </div>
-                                <div class="card-body card-edit" name="cardedit">
-                                    <p class="card-text">Обложка:<span name="1">*</span> <input class="form-control form-control-lg input-edit-book" type="text" placeholder="Введите текст..." v-model="selectedbook.image"></p>
-                                    <h5 class="card-title">Название:<span name="2">*</span><input class="form-control form-control-lg input-edit-book input-edit-book-title" type="text" placeholder="Введите текст..." v-model="selectedbook.title"></h5>
-                                    <p class="card-text">Автор:<span name="3">*</span><input class="form-control form-control-lg input-edit-book" type="text" placeholder="Введите текст..." v-model="selectedbook.nameAuthor"></p>
-                                    <p class="card-text">Год издания:<span name="4">*</span><input class="form-control form-control-lg input-edit-book" type="number" min="0" oninput="validity.valid||(value='');" placeholder="Введите текст..." v-model="selectedbook.year"></p>
-                                    <p class="card-text">Издание:<span name="5">*</span><input class="form-control form-control-lg input-edit-book" type="text" placeholder="Введите текст..." v-model="selectedbook.pubHouse"></p>
-                                    <p class="card-text">Количество страниц:<span name="6">*</span><input class="form-control form-control-lg input-edit-book" type="number" min="0" oninput="validity.valid||(value='');" placeholder="Введите текст..." v-model="selectedbook.pages"></p>
-                                    <p class="card-text">Количество экземпляров:<span name="7">*</span><input class="form-control form-control-lg input-edit-book" type="number" min="0" oninput="validity.valid||(value='');" placeholder="Введите текст..." v-model="selectedbook.amount"></p>
+                                    <img :src="book.image" class="card-img-top" alt="...">
+                                    <div class="card-body card-look" name="cardlook">
+                                    <h5 class="card-title">{{book.title}}</h5>
+                                    <p class="card-text">№: {{book.id}}</p>
+                                    <p class="card-text">{{ $t("author") }}: {{book.nameAuthor}}</p>
+                                    <p class="card-text">{{ $t("theYearOfPublishing") }}: {{book.year}}</p>
+                                    <p class="card-text">{{ $t("edition") }}: {{book.pubHouse}}</p>
+                                    <p class="card-text">{{ $t("numberOfPages") }}: {{book.pages}}</p>
+                                    <p class="card-text">{{ $t("numberOfCopies") }}: {{book.amount}}</p>
+                                    </div>
+                                    <div class="card-body card-edit" name="cardedit">
+                                        <p class="card-text">{{ $t("cover") }}:<span name="1">*</span> <input class="form-control form-control-lg input-edit-book" type="text" v-bind:placeholder='$t("enterText") + "..."' v-model="selectedbook.image"></p>
+                                        <h5 class="card-title">{{ $t("name") }}:<span name="2">*</span><input class="form-control form-control-lg input-edit-book input-edit-book-title" type="text" v-bind:placeholder='$t("enterText") + "..."' v-model="selectedbook.title"></h5>
+                                        <p class="card-text">{{ $t("author") }}:<span name="3">*</span><input class="form-control form-control-lg input-edit-book" type="text" v-bind:placeholder='$t("enterText") + "..."' v-model="selectedbook.nameAuthor"></p>
+                                        <p class="card-text">{{ $t("theYearOfPublishing") }}:<span name="4">*</span><input class="form-control form-control-lg input-edit-book" type="number" min="0" oninput="validity.valid||(value='');" v-bind:placeholder='$t("enterText") + "..."' v-model="selectedbook.year"></p>
+                                        <p class="card-text">{{ $t("edition") }}:<span name="5">*</span><input class="form-control form-control-lg input-edit-book" type="text" v-bind:placeholder='$t("enterText") + "..."' v-model="selectedbook.pubHouse"></p>
+                                        <p class="card-text">{{ $t("numberOfPages") }}:<span name="6">*</span><input class="form-control form-control-lg input-edit-book" type="number" min="0" oninput="validity.valid||(value='');" v-bind:placeholder='$t("enterText") + "..."' v-model="selectedbook.pages"></p>
+                                        <p class="card-text">{{ $t("numberOfCopies") }}:<span name="7">*</span><input class="form-control form-control-lg input-edit-book" type="number" min="0" oninput="validity.valid||(value='');" v-bind:placeholder='$t("enterText") + "..."' v-model="selectedbook.amount"></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                </div>
             </div>
-        </div>
-    <div id="visitor-box" class="hide-func">
-        <div id="visitor-container" class="left-right-width bg-z-indx">
-            <h1 class="navbar-brand head">Все клиенты:</h1>
-            <button type="button" class="btn btn-success btn-new" @click="ShowVisitorForm(null)" id="new-visitor">Новый клиент</button>
-            <hr>
-            <div class="sort-div control-view">
-                    <p>Отсортировать:</p>
-                    <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="sortvisitor($event)">
-                        <option value="0" selected>По порядку</option>
-                        <option value="1">По имени</option>
-                    </select>
-            </div>
-            <div class="search-div control-view">
-                    <p>Поиск:</p>
-                    <input class="form-control form-control-lg" type="text" placeholder="Введите текст..." v-model="filterText" v-on:keyUp="filter">
-            </div>
-            <br><br>
-            <table class="table" cellspacing='0'>
-                <tr>
-                    <th>№</th>
-                    <th>Имя</th>
-                    <th>Номер телефона</th>
-                    <th>Редактировать</th>
-                </tr>
-                <tr v-for="(vis) in filterArray">
-                    <td>{{vis.id}}</td>
-                    <td>{{vis.name}}</td>
-                    <td>{{vis.phone}}</td>
-                    <td><img src="images/pencil.png" @click="ShowVisitorForm(vis)"></td>
-                </tr>
-            </table>     
-                <edit-component :createeditnewvisitorfunc="createeditnewvisitor" :headerform="headerform" :selectedvisitor="selectedvisitor"/>
-        </div>
-    </div>
-    <div id="check-box" class="hide-func">
-            <div id="check-container" class="left-right-width bg-z-indx">
-                <h1 class="navbar-brand head">Все карты:</h1>
-                <button type="button" class="btn btn-warning btn-new" @click="ShowCheckForm()" id="new-check">Новая карта</button>
+        <div id="visitor-box" class="hide-func">
+            <div id="visitor-container" class="left-right-width bg-z-indx">
+                <h1 class="navbar-brand head">{{ $t("allClients") }}:</h1>
+                <button type="button" class="btn btn-success btn-new" @click="ShowVisitorForm(null)" id="new-visitor">{{ $t("newClient") }}</button>
                 <hr>
                 <div class="sort-div control-view">
-                        <p>Отсортировать:</p>
-                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="sortcheck($event)">
-                            <option value="0" selected>По порядку</option>
-                            <option value="1">По имени клиента</option>
-                            <option value="2">По названию книги</option>
+                        <p>{{ $t("sort") }}:</p>
+                        <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="sortvisitor($event)">
+                            <option value="0" selected>{{ $t("inOrder") }}</option>
+                            <option value="1">{{ $t("byName") }}</option>
                         </select>
                 </div>
                 <div class="search-div control-view">
-                        <p>Поиск:</p>
-                        <input class="form-control form-control-lg" type="text" placeholder="Введите текст..." v-model="filterText" v-on:keyUp="filter">
+                        <p>{{ $t("search") }}:</p>
+                        <input class="form-control form-control-lg" type="text" v-bind:placeholder='$t("enterText") + "..."' v-model="filterText" v-on:keyUp="filter">
                 </div>
                 <br><br>
                 <table class="table" cellspacing='0'>
                     <tr>
                         <th>№</th>
-                        <th>Имя клиента</th>
-                        <th>Название книги</th>
-                        <th>Дата выдачи</th>
-                        <th>Дата возврата</th>
+                        <th>{{ $t("name2") }}</th>
+                        <th>{{ $t("phoneNumber") }}</th>
+                        <th>{{ $t("edit") }}</th>
                     </tr>
-                    <tr v-for="(chk, idx) in filterArray">
-                        <td>{{chk.id}}</td>
-                        <td>{{chk.nameVisitor}}</td>
-                        <td>{{chk.titleBook}}</td>
-                        <th>{{chk.dateTook}}</th>
-                        <td><img src="images/return.png" :name="idx" width="70px" @click="returnBook(chk, idx)">{{chk.dateReturned}}</td>
+                    <tr v-for="(vis) in filterArray">
+                        <td>{{vis.id}}</td>
+                        <td>{{vis.name}}</td>
+                        <td>{{vis.phone}}</td>
+                        <td><img src="images/pencil.png" @click="ShowVisitorForm(vis)"></td>
                     </tr>
-                </table>
-                    <edit-component-check :createnewcheckfunc="createnewcheck" :myvisitors="visitors" :mybooks="books" :myfilterboks = "myfilterboks"/>
-            </div>
-    </div>
-    <div id="stat-box"  class="hide-func">
-        <div id="stat-container" class="left-right-width bg-z-indx">
-            <div>
-                <h1 class="navbar-brand head">Самые активные пользователи:</h1>
-                <ul class="list4a">
-                        <li v-for="(stt) in AktUsers">{{stt}}</li> 
-                </ul>
-            </div>
-            <div>
-                <h1 class="navbar-brand head">Самые популярные книги:</h1>
-                <ul class="list2a">
-                        <li v-for="(stt) in PopBooks">{{stt}}</li> 
-                </ul>
+                </table>     
+                    <edit-component :createeditnewvisitorfunc="createeditnewvisitor" :headerform="headerform" :selectedvisitor="selectedvisitor"/>
             </div>
         </div>
-    </div>
+        <div id="check-box" class="hide-func">
+                <div id="check-container" class="left-right-width bg-z-indx">
+                    <h1 class="navbar-brand head">{{ $t("allCards") }}:</h1>
+                    <button type="button" class="btn btn-warning btn-new" @click="ShowCheckForm()" id="new-check">{{ $t("newCard") }}</button>
+                    <hr>
+                    <div class="sort-div control-view">
+                            <p>{{ $t("sort") }}:</p>
+                            <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="sortcheck($event)">
+                                <option value="0" selected>{{ $t("inOrder") }}</option>
+                                <option value="1">{{ $t("byCustomerName") }}</option>
+                                <option value="2">{{ $t("byBookTitle") }}</option>
+                            </select>
+                    </div>
+                    <div class="search-div control-view">
+                            <p>{{ $t("search") }}:</p>
+                            <input class="form-control form-control-lg" type="text" v-bind:placeholder='$t("enterText") + "..."' v-model="filterText" v-on:keyUp="filter">
+                    </div>
+                    <br><br>
+                    <table class="table" cellspacing='0'>
+                        <tr>
+                            <th>№</th>
+                            <th>{{ $t("clientName") }}</th>
+                            <th>{{ $t("nameOfTheBook") }}</th>
+                            <th>{{ $t("dateOfIssue") }}</th>
+                            <th>{{ $t("returnDate") }}</th>
+                        </tr>
+                        <tr v-for="(chk, idx) in filterArray">
+                            <td>{{chk.id}}</td>
+                            <td>{{chk.nameVisitor}}</td>
+                            <td>{{chk.titleBook}}</td>
+                            <th>{{chk.dateTook}}</th>
+                            <td><img src="images/return.png" :name="idx" width="70px" @click="returnBook(chk, idx)">{{chk.dateReturned}}</td>
+                        </tr>
+                    </table>
+                        <edit-component-check :createnewcheckfunc="createnewcheck" :myvisitors="visitors" :mybooks="books" :myfilterboks = "myfilterboks"/>
+                </div>
+        </div>
+        <div id="stat-box"  class="hide-func">
+            <div id="stat-container" class="left-right-width bg-z-indx">
+                <div>
+                    <h1 class="navbar-brand head">{{ $t("mostActiveUsers") }}:</h1>
+                    <ul class="list4a">
+                            <li v-for="(stt) in AktUsers">{{stt}}</li> 
+                    </ul>
+                </div>
+                <div>
+                    <h1 class="navbar-brand head">{{ $t("mostPopularBooks") }}:</h1>
+                    <ul class="list2a">
+                            <li v-for="(stt) in PopBooks">{{stt}}</li> 
+                    </ul>
+                </div>
+            </div>
+        </div>
+
 </body>
 </html>

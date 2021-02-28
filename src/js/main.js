@@ -1,4 +1,5 @@
 import "../css/style.css";
+import { i18n } from "./i18n/localization";
 /// models
 import { BookModel } from "./models/book_model";
 import { CheckModel } from "./models/check_model";
@@ -152,8 +153,9 @@ $("#Check-Menu-But").click(function () {
 $("#Stat-Menu-But").click(function () {
   show(3);
 });
-//раздел Книги
+//раздел книг
 let VueBook = new Vue({
+  i18n,
   el: "#books-container",
   data: {
     books: JSON.parse(valBooks),
@@ -400,14 +402,14 @@ Vue.component("edit-component", {
               <form onsubmit="return false;">
                   <a @click="btnClouseClick">✖</a>
                   <h4>{{headerform}}</h4>
-                  <h6>Имя Фамилия:</h6>
+                  <h6>{{ $t("name2") }} {{ $t("surname") }}:</h6>
                   <input v-model="selectedvisitor.name" type="text" pattern="[A-ZА-ЯЁ][a-zа-яё]* [A-ZА-ЯЁ][a-zа-яё]*">
-                  <p id="VisIsHaveName">Посетитель с таким именем уже существует*</p>
-                  <h6>Номер телефона(0-9, -, ):</h6>
+                  <p id="VisIsHaveName">{{ $t("visitorAlreadyExists") }}*</p>
+                  <h6>{{ $t("phoneNumber") }}(0-9, -, ):</h6>
                   <input v-model="selectedvisitor.phone" type="text" pattern="([0-9]* ?-?[0-9]*)*">
-                  <p id="VisIsHavePhone">Посетитель с таким номером телефона уже существует*</p>
+                  <p id="VisIsHavePhone">{{ $t("phoneAlreadyExists") }}*</p>
                   <br>
-                  <button type="buttom" @mousedown="btncreated" class="btn btn-primary">Сохранить</button>
+                  <button type="buttom" @mousedown="btncreated" class="btn btn-primary">{{ $t("save") }}</button>
               </form>
           </div>`,
   methods: {
@@ -424,15 +426,16 @@ Vue.component("edit-component", {
     },
   },
 });
-//раздел Пользователи
+//раздел пользователей
 let VueVisitor = new Vue({
+  i18n,
   el: "#visitor-container",
   data: {
     visitors: JSON.parse(valVisitors),
     filterArray: [],
     filterText: "",
     selectedSortList: 0,
-    headerform: "Добавить клиента:",
+    headerform: i18n.messages[i18n.locale].addCustomer + ":",
     selectedvisitor: new VisitorModel(0, "", ""),
   },
   methods: {
@@ -515,7 +518,7 @@ let VueVisitor = new Vue({
         this.selectedvisitor.name = ElementVisitor.name;
         this.selectedvisitor.phone = ElementVisitor.phone;
       } else {
-        this.headerform = "Добавить клиента:";
+        this.headerform = i18n.messages[i18n.locale].addCustomer + ":";
         this.selectedvisitor = new VisitorModel(0, "", "");
       }
       showBackgraund();
@@ -551,17 +554,17 @@ Vue.component("edit-component-check", {
               <div id="window-div-check">
                   <form onsubmit="return false;">
                       <a @click="btnClouseClick">✖</a>
-                      <h4>Новая карточка</h4>
-                      <h6>Имя посетителя:</h6>
+                      <h4>{{ $t("newCard") }}</h4>
+                      <h6>{{ $t("clientName") }}:</h6>
                       <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="changeVis($event)">
                               <option v-for="(vis, idx) in myvisitors" :value="idx">{{vis.name}}</option>
                       </select>
-                      <h6>Книга:</h6>
+                      <h6>{{ $t("book") }}:</h6>
                       <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" v-on:change="changeBk($event)">
                           <option v-for="(bk, idx) in myfilterboks" :value="idx">{{bk.title}}</option>
                       </select>
                       <br>
-                      <button type="buttom" @mousedown="btncreated" class="btn btn-primary">Сохранить</button>
+                      <button type="buttom" @mousedown="btncreated" class="btn btn-primary">{{ $t("save") }}</button>
                   </form>
               </div>`,
   methods: {
@@ -600,8 +603,9 @@ Vue.component("edit-component-check", {
     },
   },
 });
-//раздел Карты
+//раздел карт
 let VueCheck = new Vue({
+  i18n,
   el: "#check-container",
   data: {
     checks: JSON.parse(valChecks),
@@ -729,7 +733,7 @@ let VueCheck = new Vue({
           this.myfilterboks.push(this.books[i]);
         }
       }
-      this.headerform = "Добавить клиента:";
+      this.headerform = i18n.messages[i18n.locale].addCustomer + ":";
       this.selectedcheck = new CheckModel();
       showBackgraund();
       $("#window-div-check").css("height", "280px");
@@ -757,8 +761,9 @@ let VueCheck = new Vue({
     }
   },
 });
-
+//раздел статистики
 let VueStat = new Vue({
+  i18n,
   el: "#stat-container",
   data: {
     AktUsers: [],
