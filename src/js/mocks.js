@@ -15,7 +15,7 @@ export const mockBooks = [
     "Дрофа-Плюс",
     384,
     57,
-    "http://loveread.ec/img/photo_books/4450.jpg"
+    "https://www.moscowbooks.ru/image/book/675/orig/i675418.jpg"
   ),
   new BookModel(
     1,
@@ -26,7 +26,7 @@ export const mockBooks = [
     "Эксмо",
     104,
     3,
-    "http://loveread.ec/img/photo_books/1833.jpg"
+    "https://img-gorod.ru/upload/iblock/b45/b4511b30b69ef1bd20e781e4f86adac5.jpg"
   ),
   new BookModel(
     2,
