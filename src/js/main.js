@@ -93,7 +93,13 @@ if (valLastPageID == null) {
   localStorage.setItem("LastPageID", valLastPageID);
 }
 //вернуть последнюю вкладку после перезагрузки страницы
-let ArrPages = ["#book-box", "#visitor-box", "#check-box", "#stat-box"];
+let ArrPages = [
+  "#book-box",
+  "#visitor-box",
+  "#check-box",
+  "#stat-box",
+  "#info-box",
+];
 let LastPage = ArrPages[valLastPageID];
 $(".hide-func").css("transition", "all 0s");
 $(".hide-func").css("left", "-100%");
@@ -152,6 +158,9 @@ $("#Check-Menu-But").click(function () {
 });
 $("#Stat-Menu-But").click(function () {
   show(3);
+});
+$("#Info-Menu-But").click(function () {
+  show(4);
 });
 //раздел книг
 let VueBook = new Vue({

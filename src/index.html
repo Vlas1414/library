@@ -17,7 +17,7 @@
         <div id="backgraund-hide"></div>
         <div id="app" class="bg-light bg-z-indx">
             <nav class="navbar navbar-expand-lg navbar-light left-right-width">
-                <a class="navbar-brand" href="#">{{ $t("library") }}</a>
+                <a class="navbar-brand" href="#">LIBRARY</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
                 </button>
@@ -27,6 +27,7 @@
                         <a class="nav-item nav-link" href="#" id="Visitors-Menu-But">{{ $t("visitors") }}</a>
                         <a class="nav-item nav-link" href="#" id="Check-Menu-But">{{ $t("cards") }}</a>
                         <a class="nav-item nav-link" href="#" id="Stat-Menu-But">{{ $t("statistics") }}</a>
+                        <a class="nav-item nav-link" href="#" id="Info-Menu-But">{{ $t("info") }}</a>
                     </div>
                     <div class="changeLanguge_btnsBox">
                         <span @click="uaClick()" id="changeLanguge_btn_ukrainian" class="changeLanguge_btnText changeLanguge_btn" v-bind:class="{ 'changeLanguge_btn-active': languge == 'ua'} ">Українська</span>
@@ -174,6 +175,19 @@
                             <li v-for="(stt) in PopBooks">{{stt}}</li> 
                     </ul>
                 </div>
+            </div>
+        </div>
+        <div id="info-box"  class="hide-func">
+            <div id="info-container" class="left-right-width bg-z-indx">
+                <div class="media">
+                    <img src="./images/photo.jpg" class="align-self-center mr-3 photo-img" alt="Vlas photo">
+                    <div class="jumbotron">
+                        <h1 class="display-4">{{ $t("helloPhrase") }}</h1>
+                        <p class="lead">{{ $t("tagline") }}</p>
+                        <hr class="my-4">
+                        <p>{{ $t("discribe") }}</p>
+                      </div>
+                  </div>
             </div>
         </div>
 

@@ -495,3 +495,15 @@ table img {
 .list2a li:hover:after {
   margin-left: 10px;
 }
+
+#info-container {
+  padding-top: 40px;
+}
+.photo-img {
+  width: 250px;
+  border-radius: 100%;
+}
+
+.jumbotron {
+  background-color: transparent;
+}

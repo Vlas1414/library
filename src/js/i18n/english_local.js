@@ -5,6 +5,7 @@ export const en = {
   visitors: "Visitors",
   cards: "Cards",
   statistics: "Statistics",
+  info: "Information",
   newBook: "New book",
   sort: "Sort",
   inOrder: "In order",
@@ -45,4 +46,8 @@ export const en = {
   visitorAlreadyExists: "A visitor with the same name already exists",
   phoneAlreadyExists: "A visitor with the same phone number already exists",
   book: "Book",
+  helloPhrase: "Hello! My name is Vlas",
+  tagline: "Tagline: Any work must be automated. Even in the library.",
+  discribe:
+    "This is a web page for a lab for the subject of Internet technology. I hope Dmitry Gennadievich will finally accept it.",
 };
